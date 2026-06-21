@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Administração - Barbearia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn-danger {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">Painel de Administração</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Voltar para o Site</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Filtrar Reservas</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="date" class="form-control" id="dataFiltro">
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-primary" onclick="filtrarReservas()">Filtrar</button>
+                                <button class="btn btn-secondary" onclick="limparFiltro()">Limpar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Reservas</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Horário</th>
+                                        <th>Nome</th>
+                                        <th>Telefone</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listaReservas">
+                                    <!-- As reservas serão inseridas aqui via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Função para carregar todas as reservas
+        async function carregarReservas() {
+            try {
+                const response = await fetch('/reservas');
+                const reservas = await response.json();
+                exibirReservas(reservas);
+            } catch (error) {
+                console.error('Erro ao carregar reservas:', error);
+                alert('Erro ao carregar as reservas');
+            }
+        }
+
+        // Função para exibir as reservas na tabela
+        function exibirReservas(reservas) {
+            const tbody = document.getElementById('listaReservas');
+            tbody.innerHTML = '';
+
+            reservas.forEach(reserva => {
+                const data = new Date(reserva.data_hora);
+                const dataFormatada = data.toLocaleDateString('pt-BR');
+                const horaFormatada = data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${dataFormatada}</td>
+                    <td>${horaFormatada}</td>
+                    <td>${reserva.nome}</td>
+                    <td>${reserva.telefone}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="cancelarReserva(${reserva.id})">
+                            <i class="bi bi-trash"></i> Cancelar
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Função para filtrar reservas por data
+        async function filtrarReservas() {
+            const data = document.getElementById('dataFiltro').value;
+            if (!data) {
+                alert('Por favor, selecione uma data');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/reservas/${data}`);
+                const reservas = await response.json();
+                exibirReservas(reservas);
+            } catch (error) {
+                console.error('Erro ao filtrar reservas:', error);
+                alert('Erro ao filtrar as reservas');
+            }
+        }
+
+        // Função para limpar o filtro
+        function limparFiltro() {
+            document.getElementById('dataFiltro').value = '';
+            carregarReservas();
+        }
+
+        // Função para cancelar uma reserva
+        async function cancelarReserva(id) {
+            if (!confirm('Tem certeza que deseja cancelar esta reserva?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/reservas/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    mode: 'cors',
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Erro ao cancelar reserva');
+                }
+
+                alert('Reserva cancelada com sucesso!');
+                carregarReservas();
+            } catch (error) {
+                console.error('Erro ao cancelar reserva:', error);
+                alert(error.message || 'Erro ao cancelar a reserva. Por favor, tente novamente.');
+            }
+        }
+
+        // Carregar reservas ao iniciar a página
+        document.addEventListener('DOMContentLoaded', carregarReservas);
+    </script>
+</body>
+</html> 
