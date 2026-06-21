@@ -329,9 +329,10 @@ app.get('/admin/metricas', exigirAdminApi, async (req, res) => {
 
 // Rota para criar um novo agendamento
 app.post('/agendar', async (req, res) => {
-    const { nome, telefone, data_hora, servico } = req.body;
+    const { nome, telefone, data_hora } = req.body;
+    const servico = req.body.servico || 'Corte';
 
-    if (!nome || !telefone || !data_hora || !servico) {
+    if (!nome || !telefone || !data_hora) {
         return res.status(400).json({
             success: false,
             error: 'Todos os campos são obrigatórios'
