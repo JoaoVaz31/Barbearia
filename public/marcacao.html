@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendamento - Art Off Fade</title>
+    <title>Agendamento - Art Of Fade</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -239,7 +239,7 @@
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <i class="fas fa-cut"></i> Art Off Fade
+                <i class="fas fa-cut"></i> Art Of Fade
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -256,7 +256,7 @@
                         <a class="nav-link" href="index.html#sobre">Sobre</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html#contato">Contato</a>
+                        <a class="nav-link" href="index.html#contacto">Contacto</a>
                     </li>
                 </ul>
             </div>
@@ -300,6 +300,12 @@
                 <div class="modal-body">
                     <form id="formAgendamento">
                         <div class="mb-3">
+                            <label for="servico" class="form-label">
+                                <i class="fas fa-cut"></i> Serviço:
+                            </label>
+                            <select class="form-control" id="servico" required></select>
+                        </div>
+                        <div class="mb-3">
                             <label for="nome" class="form-label">
                                 <i class="fas fa-user"></i> Nome:
                             </label>
@@ -326,26 +332,6 @@
       </div>
     </div>
 
-    <!-- Modal de Confirmação -->
-    <div class="modal fade" id="confirmacaoModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmar Agendamento</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Confirme os dados do seu agendamento:</p>
-                    <div id="dadosConfirmacao"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="confirmarAgendamento">Confirmar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
@@ -353,10 +339,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const horariosDiv = document.getElementById('horarios');
+            const servicoSelect = document.getElementById('servico');
             const nomeInput = document.getElementById('nome');
             const telefoneInput = document.getElementById('telefone');
             const horarioInput = document.getElementById('horarioSelecionado');
-            const API_URL = '';
             let dataSelecionada = null;
             let horarioSelecionado = null;
 
@@ -373,10 +359,24 @@
                 utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
             });
 
+            // Função para carregar os serviços e preços disponíveis
+            async function carregarServicos() {
+                try {
+                    const response = await fetch('/config');
+                    const { servicos } = await response.json();
+                    servicoSelect.innerHTML = Object.entries(servicos)
+                        .map(([nome, preco]) => `<option value="${nome}">${nome} — ${preco}€</option>`)
+                        .join('');
+                } catch (error) {
+                    console.error('Erro ao carregar serviços:', error);
+                }
+            }
+            carregarServicos();
+
             // Função para carregar dias ocupados
             async function carregarDiasOcupados() {
                 try {
-                    const response = await fetch(`${API_URL}/dias-ocupados`);
+                    const response = await fetch('/dias-ocupados');
                     if (!response.ok) {
                         throw new Error(`Erro ao carregar dias ocupados: ${response.status}`);
                     }
@@ -425,7 +425,7 @@
                     showLoading();
                     console.log('Carregando horários para:', data);
                     
-                    const response = await fetch(`${API_URL}/horarios/${data}`);
+                    const response = await fetch(`/horarios/${data}`);
                     if (!response.ok) {
                         throw new Error(`Erro ao carregar horários: ${response.status}`);
                     }
@@ -434,7 +434,16 @@
                     console.log('Horários ocupados recebidos:', horariosOcupados);
                     
                     // Atualiza a lista de horários disponíveis
-                    const horariosDisponiveis = horarios.filter(hora => !horariosOcupados.includes(hora));
+                    let horariosDisponiveis = horarios.filter(hora => !horariosOcupados.includes(hora));
+
+                    // Se o dia selecionado for hoje, remove os horários que já passaram
+                    const agora = new Date();
+                    const agoraLocal = new Date(agora.getTime() - (agora.getTimezoneOffset() * 60000));
+                    if (data === agoraLocal.toISOString().split('T')[0]) {
+                        const horaAtual = agoraLocal.toISOString().substring(11, 16);
+                        horariosDisponiveis = horariosDisponiveis.filter(hora => hora > horaAtual);
+                    }
+
                     console.log('Horários disponíveis:', horariosDisponiveis);
                     
                     // Limpa a lista atual
@@ -524,7 +533,7 @@
                     const dataHora = `${dataSelecionada} ${horarioSelecionado}`;
                     console.log('Enviando agendamento:', { nome, telefone, dataHora });
                     
-                    const response = await fetch(`${API_URL}/agendar`, {
+                    const response = await fetch('/agendar', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -532,7 +541,8 @@
                         body: JSON.stringify({
                             nome,
                             telefone,
-                            data_hora: dataHora
+                            data_hora: dataHora,
+                            servico: servicoSelect.value
                         })
                     });
 

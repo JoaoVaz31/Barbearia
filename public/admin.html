@@ -34,6 +34,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="index.html">Voltar para o Site</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin-metricas.html">Métricas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="sair()">Sair</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -72,6 +78,9 @@
                                         <th>Horário</th>
                                         <th>Nome</th>
                                         <th>Telefone</th>
+                                        <th>Serviço</th>
+                                        <th>Preço</th>
+                                        <th>Pago</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
@@ -88,10 +97,35 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        let metodosPagamento = [];
+
+        // Função para sair (logout)
+        async function sair() {
+            await fetch('/admin/logout', { method: 'POST' });
+            window.location.href = '/admin-login.html';
+        }
+
+        // Redireciona para o login se a sessão tiver expirado
+        function tratarRespostaProtegida(response) {
+            if (response.status === 401) {
+                window.location.href = '/admin-login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Função para carregar os métodos de pagamento disponíveis
+        async function carregarMetodosPagamento() {
+            const response = await fetch('/config');
+            const config = await response.json();
+            metodosPagamento = config.metodosPagamento;
+        }
+
         // Função para carregar todas as reservas
         async function carregarReservas() {
             try {
                 const response = await fetch('/reservas');
+                if (!tratarRespostaProtegida(response)) return;
                 const reservas = await response.json();
                 exibirReservas(reservas);
             } catch (error) {
@@ -107,8 +141,19 @@
 
             reservas.forEach(reserva => {
                 const data = new Date(reserva.data_hora);
-                const dataFormatada = data.toLocaleDateString('pt-BR');
-                const horaFormatada = data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                const dataFormatada = data.toLocaleDateString('pt-PT');
+                const horaFormatada = data.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+
+                const colunaPagamento = reserva.pago
+                    ? `<span class="badge bg-success">${reserva.metodo_pagamento}</span>`
+                    : `
+                        <select class="form-select form-select-sm d-inline-block w-auto" id="metodo-${reserva.id}">
+                            ${metodosPagamento.map(m => `<option value="${m}">${m}</option>`).join('')}
+                        </select>
+                        <button class="btn btn-success btn-sm" onclick="marcarComoPago(${reserva.id})">
+                            <i class="bi bi-check-lg"></i> Pago
+                        </button>
+                    `;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -116,6 +161,9 @@
                     <td>${horaFormatada}</td>
                     <td>${reserva.nome}</td>
                     <td>${reserva.telefone}</td>
+                    <td>${reserva.servico}</td>
+                    <td>${Number(reserva.preco).toFixed(2)}€</td>
+                    <td>${colunaPagamento}</td>
                     <td>
                         <button class="btn btn-danger btn-sm" onclick="cancelarReserva(${reserva.id})">
                             <i class="bi bi-trash"></i> Cancelar
@@ -124,6 +172,31 @@
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        // Função para marcar uma reserva como paga
+        async function marcarComoPago(id) {
+            const metodo_pagamento = document.getElementById(`metodo-${id}`).value;
+
+            try {
+                const response = await fetch(`/reservas/${id}/pagamento`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ metodo_pagamento })
+                });
+
+                if (!tratarRespostaProtegida(response)) return;
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Erro ao registar pagamento');
+                }
+
+                carregarReservas();
+            } catch (error) {
+                console.error('Erro ao registar pagamento:', error);
+                alert(error.message || 'Erro ao registar o pagamento. Por favor, tente novamente.');
+            }
         }
 
         // Função para filtrar reservas por data
@@ -136,6 +209,7 @@
 
             try {
                 const response = await fetch(`/reservas/${data}`);
+                if (!tratarRespostaProtegida(response)) return;
                 const reservas = await response.json();
                 exibirReservas(reservas);
             } catch (error) {
@@ -167,6 +241,8 @@
                     credentials: 'include'
                 });
 
+                if (!tratarRespostaProtegida(response)) return;
+
                 if (!response.ok) {
                     const data = await response.json();
                     throw new Error(data.error || 'Erro ao cancelar reserva');
@@ -180,8 +256,11 @@
             }
         }
 
-        // Carregar reservas ao iniciar a página
-        document.addEventListener('DOMContentLoaded', carregarReservas);
+        // Carregar métodos de pagamento e reservas ao iniciar a página
+        document.addEventListener('DOMContentLoaded', async () => {
+            await carregarMetodosPagamento();
+            carregarReservas();
+        });
     </script>
 </body>
 </html> 

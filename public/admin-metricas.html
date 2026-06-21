@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métricas - Painel de Administração</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">Painel de Administração</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html">Reservas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Voltar para o Site</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="sair()">Sair</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <input type="month" class="form-control" id="filtroMes">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h6 class="card-title text-muted">Total Geral</h6>
+                        <div class="metric-value" id="totalGeral">—</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h6 class="card-title text-muted">Receita de Serviços</h6>
+                        <div class="metric-value" id="totalServicos">—</div>
+                        <small class="text-muted" id="quantidadeServicos"></small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h6 class="card-title text-muted">Receita de Produtos</h6>
+                        <div class="metric-value" id="totalProdutos">—</div>
+                        <small class="text-muted" id="quantidadeProdutos"></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Serviços por Método de Pagamento</h5>
+                        <ul class="list-group" id="servicosPorMetodo"></ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Faturação por Tipo de Serviço</h5>
+                        <ul class="list-group" id="servicosPorTipo"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Produtos por Método de Pagamento</h5>
+                        <ul class="list-group" id="produtosPorMetodo"></ul>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Registar Venda de Produto</h5>
+                        <form id="formVenda">
+                            <div class="mb-3">
+                                <label for="produto" class="form-label">Produto</label>
+                                <input type="text" class="form-control" id="produto" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="precoProduto" class="form-label">Preço (€)</label>
+                                <input type="number" step="0.01" min="0.01" class="form-control" id="precoProduto" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="metodoProduto" class="form-label">Método de Pagamento</label>
+                                <select class="form-select" id="metodoProduto" required></select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Registar Venda</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function tratarRespostaProtegida(response) {
+            if (response.status === 401) {
+                window.location.href = '/admin-login.html';
+                return false;
+            }
+            return true;
+        }
+
+        async function sair() {
+            await fetch('/admin/logout', { method: 'POST' });
+            window.location.href = '/admin-login.html';
+        }
+
+        function formatarEuro(valor) {
+            return `${Number(valor).toFixed(2)}€`;
+        }
+
+        function preencherLista(elementoId, dados) {
+            const lista = document.getElementById(elementoId);
+            const entradas = Object.entries(dados);
+            lista.innerHTML = entradas.length === 0
+                ? '<li class="list-group-item text-muted">Sem dados</li>'
+                : entradas.map(([chave, valor]) => `
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>${chave}</span>
+                        <strong>${formatarEuro(valor)}</strong>
+                    </li>
+                `).join('');
+        }
+
+        async function carregarMetricas() {
+            const mes = document.getElementById('filtroMes').value;
+            const response = await fetch(`/admin/metricas?mes=${mes}`);
+            if (!tratarRespostaProtegida(response)) return;
+
+            const metricas = await response.json();
+
+            document.getElementById('totalGeral').textContent = formatarEuro(metricas.totalGeral);
+            document.getElementById('totalServicos').textContent = formatarEuro(metricas.marcacoes.total);
+            document.getElementById('quantidadeServicos').textContent = `${metricas.marcacoes.quantidade} marcações pagas`;
+            document.getElementById('totalProdutos').textContent = formatarEuro(metricas.produtos.total);
+            document.getElementById('quantidadeProdutos').textContent = `${metricas.produtos.quantidade} vendas`;
+
+            preencherLista('servicosPorMetodo', metricas.marcacoes.porMetodo);
+            preencherLista('servicosPorTipo', metricas.marcacoes.porServico);
+            preencherLista('produtosPorMetodo', metricas.produtos.porMetodo);
+        }
+
+        async function carregarMetodosPagamento() {
+            const response = await fetch('/config');
+            const config = await response.json();
+            document.getElementById('metodoProduto').innerHTML = config.metodosPagamento
+                .map(m => `<option value="${m}">${m}</option>`)
+                .join('');
+        }
+
+        document.getElementById('formVenda').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const produto = document.getElementById('produto').value.trim();
+            const preco = document.getElementById('precoProduto').value;
+            const metodo_pagamento = document.getElementById('metodoProduto').value;
+
+            try {
+                const response = await fetch('/vendas-produtos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ produto, preco, metodo_pagamento })
+                });
+
+                if (!tratarRespostaProtegida(response)) return;
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Erro ao registar venda');
+                }
+
+                document.getElementById('formVenda').reset();
+                await carregarMetricas();
+            } catch (error) {
+                console.error('Erro ao registar venda:', error);
+                alert(error.message || 'Erro ao registar a venda. Por favor, tente novamente.');
+            }
+        });
+
+        document.getElementById('filtroMes').addEventListener('change', carregarMetricas);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const agora = new Date();
+            document.getElementById('filtroMes').value = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}`;
+            await carregarMetodosPagamento();
+            await carregarMetricas();
+        });
+    </script>
+</body>
+</html>
