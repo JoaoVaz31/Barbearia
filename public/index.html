@@ -12,8 +12,12 @@
             --primary-color: #2c3e50;
             --secondary-color: #34495e;
             --accent-color: #95a5a6;
+            --accent-gold: #c9a36a;
+            --accent-gold-dark: #b3884f;
             --text-color: #2c3e50;
-            --background-color: #ffffff;
+            --background-color: #f7f1e8;
+            --card-background: #ffffff;
+            --alt-section-background: #efe2cd;
         }
 
         body {
@@ -61,7 +65,7 @@
         }
 
         .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('images/barbeira.png');
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('images/barbeira.webp');
             background-size: cover;
             background-position: center;
             height: 90vh;
@@ -114,8 +118,8 @@
         }
 
         .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
+            background-color: var(--accent-gold);
+            border-color: var(--accent-gold);
             color: white;
             font-weight: 500;
             padding: 0.75rem 1.5rem;
@@ -123,8 +127,8 @@
         }
 
         .btn-primary:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
+            background-color: var(--accent-gold-dark);
+            border-color: var(--accent-gold-dark);
             transform: translateY(-2px);
         }
 
@@ -143,7 +147,7 @@
         }
 
         .service-card {
-            background-color: var(--background-color);
+            background-color: var(--card-background);
             border: 1px solid #eee;
             border-radius: 8px;
             padding: 1.5rem;
@@ -169,8 +173,15 @@
             margin-bottom: 1rem;
         }
 
+        .service-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-gold-dark);
+            margin-top: 0.5rem;
+        }
+
         .about-section {
-            background-color: #f8f9fa;
+            background-color: var(--alt-section-background);
         }
 
         .about-image {
@@ -179,7 +190,7 @@
         }
 
         .contact-info {
-            background-color: var(--background-color);
+            background-color: var(--card-background);
             border: 1px solid #eee;
             border-radius: 8px;
             padding: 2rem;
@@ -195,19 +206,36 @@
         }
 
         .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1.5px solid var(--primary-color);
             color: var(--primary-color);
-            margin: 0 1rem;
-            font-size: 1.5rem;
+            margin: 0 0.5rem;
+            font-size: 1.3rem;
             transition: all 0.3s ease;
         }
 
         .social-link:hover {
-            color: var(--accent-color);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            border-color: transparent;
+            color: white;
+        }
+
+        .social-link.instagram:hover {
+            background: radial-gradient(circle at 30% 110%, #fdf497, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        }
+
+        .social-link.facebook:hover {
+            background-color: #1877f2;
         }
 
         .barber-card {
-            background-color: var(--background-color);
+            background-color: var(--card-background);
             border: 1px solid #eee;
             border-radius: 8px;
             padding: 2rem;
@@ -221,14 +249,14 @@
         }
 
         .barber-title {
-            color: var(--accent-color);
+            color: var(--accent-gold-dark);
             font-weight: 500;
             font-style: italic;
             margin-bottom: 1rem;
         }
 
         .testimonial-card {
-            background-color: var(--background-color);
+            background-color: var(--card-background);
             border: 1px solid #eee;
             border-radius: 8px;
             padding: 2rem;
@@ -258,7 +286,7 @@
         }
 
         .contact-form {
-            background-color: var(--background-color);
+            background-color: var(--card-background);
             border: 1px solid #eee;
             border-radius: 8px;
             padding: 2rem;
@@ -274,6 +302,29 @@
         .form-control:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.25);
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            z-index: 1000;
+            transition: transform 0.2s ease;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.08);
+            color: white;
         }
 
         @media (max-width: 768px) {
@@ -304,7 +355,7 @@
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="images/logo.png" alt="Art Of Fade">
+                <img src="images/logo.webp" alt="Art Of Fade">
                 <span class="brand-name">Art Of Fade</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -354,23 +405,26 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="service-card">
-                        <img src="images/cabelo.png" alt="Corte de Cabelo" class="img-fluid">
+                        <img src="images/cabelo.webp" alt="Corte de Cabelo" class="img-fluid">
                         <h3>Corte de Cabelo</h3>
                         <p>Cortes modernos e personalizados para seu estilo.</p>
+                        <p class="service-price">12€</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="service-card">
-                        <img src="images/barba.png" alt="Barba" class="img-fluid">
+                        <img src="images/barba.webp" alt="Barba" class="img-fluid">
                         <h3>Barba</h3>
                         <p>Acabamento perfeito para sua barba.</p>
+                        <p class="service-price">8€</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="service-card">
-                        <img src="images/cabelo-barba.png" alt="Combo" class="img-fluid">
+                        <img src="images/cabelo-barba.webp" alt="Combo" class="img-fluid">
                         <h3>Combo Cabelo + Barba</h3>
                         <p>Pacote completo para seu visual.</p>
+                        <p class="service-price">18€</p>
                     </div>
                 </div>
             </div>
@@ -386,7 +440,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="barber-card text-center">
                         <div class="barber-image mb-3">
-                            <img src="images/barbeira.png" alt="Barbeiro 1" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
+                            <img src="images/barbeira.webp" alt="Barbeiro 1" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
                         </div>
                         <h4>João Silva</h4>
                         <p class="barber-title">Barbeiro Principal</p>
@@ -397,7 +451,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="barber-card text-center">
                         <div class="barber-image mb-3">
-                            <img src="images/barbeira2.png" alt="Barbeiro 2" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
+                            <img src="images/barbeira2.webp" alt="Barbeiro 2" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
                         </div>
                         <h4>Miguel Santos</h4>
                         <p class="barber-title">Especialista em Barba</p>
@@ -408,7 +462,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="barber-card text-center">
                         <div class="barber-image mb-3">
-                            <img src="images/barbeira.png" alt="Barbeiro 3" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
+                            <img src="images/barbeira.webp" alt="Barbeiro 3" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
                         </div>
                         <h4>Carlos Mendes</h4>
                         <p class="barber-title">Estilista</p>
@@ -426,7 +480,7 @@
             <h2 class="section-title">Seja bem-vindo à</h2>
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <img src="images/barbeira2.png" alt="Barbearia" class="img-fluid about-image">
+                    <img src="images/barbeira2.webp" alt="Barbearia" class="img-fluid about-image">
                 </div>
                 <div class="col-md-6">
                     <h3 class="mb-4">Art Of Fade</h3>
@@ -447,7 +501,7 @@
             <h2 class="section-title">Nosso Espaço</h2>
             <div class="row">
                 <div class="col-12">
-                    <img src="images/espaco.png" alt="Espaço da Barbearia" class="img-fluid rounded">
+                    <img src="images/espaco.webp" alt="Espaço da Barbearia" class="img-fluid rounded">
                 </div>
             </div>
         </div>
@@ -527,10 +581,10 @@
                             <p class="mb-0">Terça a Sexta: 09:00 - 18:00<br>Sábado: 09:00 - 16:00</p>
                         </div>
                         <div class="social-links mt-4">
-                            <a href="https://www.instagram.com/artoffade_/" target="_blank" class="social-link">
+                            <a href="https://www.instagram.com/artoffade_/" target="_blank" class="social-link instagram">
                                 <i class="fa-brands fa-instagram"></i>
                             </a>
-                            <a href="https://www.facebook.com/p/ART-of-FADE-100090982929930/" target="_blank" class="social-link">
+                            <a href="https://www.facebook.com/p/ART-of-FADE-100090982929930/" target="_blank" class="social-link facebook">
                                 <i class="fa-brands fa-facebook"></i>
                             </a>
                         </div>
@@ -559,6 +613,16 @@
             </div>
         </div>
     </section>
+
+    <footer class="text-center py-4" style="background-color: var(--primary-color); color: white;">
+        <p class="mb-1">&copy; 2026 Art Of Fade. Todos os direitos reservados.</p>
+        <a href="privacidade.html" class="text-white-50 me-3">Política de Privacidade</a>
+        <a href="legal.html" class="text-white-50">Aviso Legal</a>
+    </footer>
+
+    <a href="https://wa.me/351918840064" target="_blank" class="whatsapp-float" aria-label="Contactar via WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

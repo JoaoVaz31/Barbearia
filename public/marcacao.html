@@ -232,6 +232,29 @@
         font-size: 0.875rem;
         margin-top: 0.25rem;
     }
+
+    .whatsapp-float {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 56px;
+        height: 56px;
+        background-color: #25D366;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+        z-index: 1000;
+        transition: transform 0.2s ease;
+    }
+
+    .whatsapp-float:hover {
+        transform: scale(1.08);
+        color: white;
+    }
   </style>
 </head>
 <body>
@@ -287,6 +310,12 @@
         </div>
     </div>
 
+    <footer class="text-center py-4 mt-5" style="background-color: var(--text-color); color: white;">
+        <p class="mb-1">&copy; 2026 Art Of Fade. Todos os direitos reservados.</p>
+        <a href="privacidade.html" class="text-white-50 me-3">Política de Privacidade</a>
+        <a href="legal.html" class="text-white-50">Aviso Legal</a>
+    </footer>
+
     <!-- Modal de Agendamento -->
     <div class="modal fade" id="modalAgendamento" tabindex="-1">
         <div class="modal-dialog">
@@ -318,6 +347,13 @@
                             <input type="tel" class="form-control" id="telefone" required>
                         </div>
                         <input type="hidden" id="horarioSelecionado">
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="consentimento" required>
+                            <label class="form-check-label" for="consentimento">
+                                Li e aceito a <a href="privacidade.html" target="_blank">Política de Privacidade</a>
+                                e autorizo o tratamento dos meus dados para gerir esta marcação.
+                            </label>
+                        </div>
         </form>
                 </div>
                 <div class="modal-footer">
@@ -528,6 +564,11 @@
                     return;
                 }
 
+                if (!document.getElementById('consentimento').checked) {
+                    alert('Por favor, aceita a Política de Privacidade para continuar');
+                    return;
+                }
+
                 try {
                     showLoading();
                     const dataHora = `${dataSelecionada} ${horarioSelecionado}`;
@@ -559,6 +600,7 @@
                         nomeInput.value = '';
                         telefoneInput.value = '';
                         horarioInput.value = '';
+                        document.getElementById('consentimento').checked = false;
                         horarioSelecionado = null;
                         // Fecha o modal
                         bootstrap.Modal.getInstance(document.getElementById('modalAgendamento')).hide();
@@ -592,5 +634,9 @@
             carregarDiasOcupados();
     });
   </script>
+
+  <a href="https://wa.me/351918840064" target="_blank" class="whatsapp-float" aria-label="Contactar via WhatsApp">
+      <i class="fa-brands fa-whatsapp"></i>
+  </a>
 </body>
 </html>

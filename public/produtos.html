@@ -128,6 +128,29 @@
                 font-size: 1.4rem;
             }
         }
+
+        .whatsapp-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            z-index: 1000;
+            transition: transform 0.2s ease;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.08);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -135,7 +158,7 @@
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <img src="images/logo.png" alt="Art Of Fade">
+                <img src="images/logo.webp" alt="Art Of Fade">
                 <span class="brand-name">Art Of Fade</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -172,7 +195,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="product-card">
-                    <img src="images/cabelo.png" alt="Pomada Modeladora" class="img-fluid">
+                    <img src="images/cabelo.webp" alt="Pomada Modeladora" class="img-fluid">
                     <h3>Pomada Modeladora</h3>
                     <p class="product-description">Pomada com fixação forte e brilho natural.</p>
                     <p class="product-price">€45,00</p>
@@ -180,7 +203,7 @@
             </div>
             <div class="col-md-4">
                 <div class="product-card">
-                    <img src="images/cabelo.png" alt="Gel Fixador" class="img-fluid">
+                    <img src="images/cabelo.webp" alt="Gel Fixador" class="img-fluid">
                     <h3>Gel Fixador</h3>
                     <p class="product-description">Gel com fixação extra forte e sem resíduos.</p>
                     <p class="product-price">€35,00</p>
@@ -188,7 +211,7 @@
             </div>
             <div class="col-md-4">
                 <div class="product-card">
-                    <img src="images/cabelo.png" alt="Shampoo Profissional" class="img-fluid">
+                    <img src="images/cabelo.webp" alt="Shampoo Profissional" class="img-fluid">
                     <h3>Shampoo Profissional</h3>
                     <p class="product-description">Shampoo para todos os tipos de cabelo.</p>
                     <p class="product-price">€55,00</p>
@@ -201,7 +224,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="product-card">
-                    <img src="images/barba.png" alt="Óleo para Barba" class="img-fluid">
+                    <img src="images/barba.webp" alt="Óleo para Barba" class="img-fluid">
                     <h3>Óleo para Barba</h3>
                     <p class="product-description">Óleo hidratante para barba com fragrância suave.</p>
                     <p class="product-price">€65,00</p>
@@ -209,7 +232,7 @@
             </div>
             <div class="col-md-4">
                 <div class="product-card">
-                    <img src="images/barba.png" alt="Bálsamo para Barba" class="img-fluid">
+                    <img src="images/barba.webp" alt="Bálsamo para Barba" class="img-fluid">
                     <h3>Bálsamo para Barba</h3>
                     <p class="product-description">Bálsamo hidratante com fixação leve.</p>
                     <p class="product-price">€50,00</p>
@@ -217,7 +240,7 @@
             </div>
             <div class="col-md-4">
                 <div class="product-card">
-                    <img src="images/barba.png" alt="Kit Barba Completo" class="img-fluid">
+                    <img src="images/barba.webp" alt="Kit Barba Completo" class="img-fluid">
                     <h3>Kit Barba Completo</h3>
                     <p class="product-description">Kit com óleo, bálsamo e escova para barba.</p>
                     <p class="product-price">€120,00</p>
@@ -230,7 +253,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="product-card">
-                    <img src="images/cabelo-barba.png" alt="Kit Premium" class="img-fluid">
+                    <img src="images/cabelo-barba.webp" alt="Kit Premium" class="img-fluid">
                     <h3>Kit Premium</h3>
                     <p class="product-description">Kit completo com produtos para cabelo e barba.</p>
                     <p class="product-price">€180,00</p>
@@ -238,7 +261,7 @@
             </div>
             <div class="col-md-4">
                 <div class="product-card">
-                    <img src="images/cabelo-barba.png" alt="Kit Iniciante" class="img-fluid">
+                    <img src="images/cabelo-barba.webp" alt="Kit Iniciante" class="img-fluid">
                     <h3>Kit Iniciante</h3>
                     <p class="product-description">Kit básico com produtos essenciais.</p>
                     <p class="product-price">€100,00</p>
@@ -246,7 +269,7 @@
             </div>
             <div class="col-md-4">
                 <div class="product-card">
-                    <img src="images/cabelo-barba.png" alt="Kit Profissional" class="img-fluid">
+                    <img src="images/cabelo-barba.webp" alt="Kit Profissional" class="img-fluid">
                     <h3>Kit Profissional</h3>
                     <p class="product-description">Kit completo com produtos profissionais.</p>
                     <p class="product-price">€250,00</p>
@@ -254,6 +277,16 @@
             </div>
         </div>
     </div>
+
+    <footer class="text-center py-4 mt-5" style="background-color: var(--primary-color); color: white;">
+        <p class="mb-1">&copy; 2026 Art Of Fade. Todos os direitos reservados.</p>
+        <a href="privacidade.html" class="text-white-50 me-3">Política de Privacidade</a>
+        <a href="legal.html" class="text-white-50">Aviso Legal</a>
+    </footer>
+
+    <a href="https://wa.me/351918840064" target="_blank" class="whatsapp-float" aria-label="Contactar via WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
