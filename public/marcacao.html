@@ -15,9 +15,10 @@
         :root {
             --primary-color: #ffffff;
             --secondary-color: #f8f9fa;
-            --accent-color: #ffd700;
-            --text-color: #333333;
-            --background-color: #f8f9fa;
+            --accent-color: #c9a36a;
+            --accent-dark: #b3884f;
+            --text-color: #2c3e50;
+            --background-color: #f7f1e8;
         }
 
     body {
@@ -27,8 +28,8 @@
         }
 
         .navbar {
-            background-color: var(--primary-color) !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: var(--background-color) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .navbar-brand {
@@ -78,7 +79,7 @@
             background-color: var(--primary-color);
             border-color: var(--accent-color);
             color: var(--text-color);
-            box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.15);
+            box-shadow: 0 0 0 0.25rem rgba(201, 163, 106, 0.2);
         }
 
         #horarios {
@@ -131,16 +132,16 @@
         .btn-primary {
             background-color: var(--accent-color);
             border-color: var(--accent-color);
-            color: var(--text-color);
+            color: white;
             font-weight: bold;
             padding: 0.75rem 1.5rem;
             transition: all 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color: #ffed4a;
-            border-color: #ffed4a;
-            color: var(--text-color);
+            background-color: var(--accent-dark);
+            border-color: var(--accent-dark);
+            color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
@@ -258,6 +259,50 @@
         transform: scale(1.08);
         color: white;
     }
+
+    .site-footer {
+        background-color: var(--text-color);
+        color: white;
+        padding: 3rem 0 1.5rem;
+        margin-top: 3rem;
+    }
+
+    .site-footer h5 {
+        color: var(--accent-color);
+        margin-bottom: 1rem;
+    }
+
+    .site-footer i {
+        color: var(--accent-color);
+    }
+
+    .footer-social {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 1.5px solid var(--accent-color);
+        color: var(--accent-color);
+        margin-right: 0.75rem;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .footer-social:hover {
+        background-color: var(--accent-color);
+        color: var(--text-color);
+    }
+
+    .footer-social:hover i {
+        color: var(--text-color);
+    }
+
+    .footer-divider {
+        border-color: rgba(255,255,255,0.2);
+        margin: 2rem 0 1.5rem;
+    }
   </style>
 </head>
 <body>
@@ -313,10 +358,41 @@
         </div>
     </div>
 
-    <footer class="text-center py-4 mt-5" style="background-color: var(--text-color); color: white;">
-        <p class="mb-1">&copy; 2026 Art Of Fade. Todos os direitos reservados.</p>
-        <a href="privacidade.html" class="text-white-50 me-3">Política de Privacidade</a>
-        <a href="legal.html" class="text-white-50">Aviso Legal</a>
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-md-4">
+                    <h5>Horário</h5>
+                    <p class="mb-1">Terça a Sexta: 09:00 – 18:00</p>
+                    <p class="mb-1">Sábado: 09:00 – 16:00</p>
+                    <p class="mb-0">Domingo e Segunda: Encerrado</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contactos</h5>
+                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i>Primeira Avenida, Amorosa, 4935-580</p>
+                    <p class="mb-1"><i class="fas fa-phone me-2"></i>+351 918 840 064</p>
+                    <p class="mb-0"><i class="fas fa-envelope me-2"></i>info@artoffade.pt</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Segue-nos</h5>
+                    <a href="https://www.instagram.com/artoffade_/" target="_blank" class="footer-social" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="https://www.facebook.com/p/ART-of-FADE-100090982929930/" target="_blank" class="footer-social" aria-label="Facebook">
+                        <i class="fa-brands fa-facebook"></i>
+                    </a>
+                    <a href="https://wa.me/351918840064" target="_blank" class="footer-social" aria-label="WhatsApp">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="text-center">
+                <p class="mb-1">&copy; 2026 Art Of Fade. Todos os direitos reservados.</p>
+                <a href="privacidade.html" class="text-white-50 me-3">Política de Privacidade</a>
+                <a href="legal.html" class="text-white-50">Aviso Legal</a>
+            </div>
+        </div>
     </footer>
 
     <!-- Modal de Agendamento -->
