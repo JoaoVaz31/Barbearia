@@ -246,6 +246,57 @@
             margin-top: auto;
         }
 
+        .product-card {
+            background-color: var(--card-background);
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            height: calc(100% - 2rem);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .product-card img {
+            width: 200px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 0 auto 1rem;
+        }
+
+        .product-category {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-gold-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .product-card h3 {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .product-card .service-price {
+            margin-top: auto;
+        }
+
         .service-card h3 {
             color: var(--primary-color);
             font-weight: 600;
@@ -466,10 +517,10 @@
                         <a class="nav-link" href="#servicos">Serviços</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#sobre">Sobre</a>
+                        <a class="nav-link" href="#produtos">Produtos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="produtos.html">Produtos</a>
+                        <a class="nav-link" href="#sobre">Sobre</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#contacto">Contacto</a>
@@ -533,6 +584,97 @@
             <strong>Sábado:</strong> 09:00 – 16:00
             <span class="hours-sep">·</span>
             <strong>Domingo e Segunda:</strong> Encerrado
+        </div>
+    </section>
+
+    <!-- Produtos -->
+    <section id="produtos" class="section about-section">
+        <div class="container">
+            <h2 class="section-title">Nossos Produtos</h2>
+            <p class="text-center mb-5">Produtos disponíveis para compra na nossa loja.</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="images/cabelo.webp" alt="Pomada Modeladora" class="img-fluid">
+                        <p class="product-category">Cabelo</p>
+                        <h3>Pomada Modeladora</h3>
+                        <p class="product-description">Pomada com fixação forte e brilho natural.</p>
+                        <p class="service-price">45€</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="images/cabelo.webp" alt="Gel Fixador" class="img-fluid">
+                        <p class="product-category">Cabelo</p>
+                        <h3>Gel Fixador</h3>
+                        <p class="product-description">Gel com fixação extra forte e sem resíduos.</p>
+                        <p class="service-price">35€</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="images/cabelo.webp" alt="Shampoo Profissional" class="img-fluid">
+                        <p class="product-category">Cabelo</p>
+                        <h3>Shampoo Profissional</h3>
+                        <p class="product-description">Shampoo para todos os tipos de cabelo.</p>
+                        <p class="service-price">55€</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="images/barba.webp" alt="Óleo para Barba" class="img-fluid">
+                        <p class="product-category">Barba</p>
+                        <h3>Óleo para Barba</h3>
+                        <p class="product-description">Óleo hidratante para barba com fragrância suave.</p>
+                        <p class="service-price">65€</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="images/barba.webp" alt="Bálsamo para Barba" class="img-fluid">
+                        <p class="product-category">Barba</p>
+                        <h3>Bálsamo para Barba</h3>
+                        <p class="product-description">Bálsamo hidratante com fixação leve.</p>
+                        <p class="service-price">50€</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="images/barba.webp" alt="Kit Barba Completo" class="img-fluid">
+                        <p class="product-category">Barba</p>
+                        <h3>Kit Barba Completo</h3>
+                        <p class="product-description">Kit com óleo, bálsamo e escova para barba.</p>
+                        <p class="service-price">120€</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="images/cabelo-barba.webp" alt="Kit Premium" class="img-fluid">
+                        <p class="product-category">Combos</p>
+                        <h3>Kit Premium</h3>
+                        <p class="product-description">Kit completo com produtos para cabelo e barba.</p>
+                        <p class="service-price">180€</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="images/cabelo-barba.webp" alt="Kit Iniciante" class="img-fluid">
+                        <p class="product-category">Combos</p>
+                        <h3>Kit Iniciante</h3>
+                        <p class="product-description">Kit básico com produtos essenciais.</p>
+                        <p class="service-price">100€</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="images/cabelo-barba.webp" alt="Kit Profissional" class="img-fluid">
+                        <p class="product-category">Combos</p>
+                        <h3>Kit Profissional</h3>
+                        <p class="product-description">Kit completo com produtos profissionais.</p>
+                        <p class="service-price">250€</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 

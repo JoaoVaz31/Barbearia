@@ -9,7 +9,7 @@ O backend é construído em **Node.js + Express**, com a base de dados em **Supa
 
 - **Site institucional**:
   - Página inicial com apresentação da barbearia Art Of Fade.
-  - Secções de **serviços**, **barbeiros**, **sobre**, **espaço**, **testemunhos** e **contactos**.
+  - Secções de **serviços**, **produtos**, **sobre**, **espaço** e **contactos**.
 - **Marcação online**:
   - Página `marcacao.html` para que os clientes possam escolher dia/hora disponíveis e agendar.
   - Validação de horários ocupados (não permite agendar em horários já reservados).
@@ -50,8 +50,8 @@ O backend é construído em **Node.js + Express**, com a base de dados em **Supa
   - `marcacao.html` – ecrã de agendamento (com seleção de serviço/preço).
   - `admin.html` – área de administração (reservas e pagamentos).
   - `admin-metricas.html` – métricas mensais e registo de vendas de produtos.
+  - (o catálogo de produtos vive na secção `#produtos` do `index.html` — informativo, venda só na loja física)
   - `admin-login.html` – login do painel de administração.
-  - `produtos.html` – catálogo de produtos (informativo, venda só na loja física).
   - `images/` – logótipo, fotos de serviços e espaço.
 
 ---
@@ -156,10 +156,10 @@ Todas as rotas abaixo são expostas pelo servidor Express em `server.js`.
 #### Configuração e autenticação
 
 - **GET `/config`**
-  - **Descrição**: devolve o catálogo de serviços/preços e os métodos de pagamento aceites.
+  - **Descrição**: devolve o catálogo de serviços/preços, os métodos de pagamento aceites e o horário de funcionamento.
   - **Resposta (200)**:
     ```json
-    { "servicos": { "Corte": 12, "Barba": 8 }, "metodosPagamento": ["Dinheiro", "MBWay"] }
+    { "servicos": { "Corte": 12, "Barba": 8 }, "metodosPagamento": ["Dinheiro", "MBWay"], "horarios": { "semana": ["09:00"], "sabado": ["09:00"], "diasFechados": [0, 1] } }
     ```
 
 - **POST `/admin/login`**
@@ -186,7 +186,7 @@ Todas as rotas abaixo são expostas pelo servidor Express em `server.js`.
     - `500` – erro ao consultar o banco de dados.
 
 - **GET `/dias-ocupados`**
-  - **Descrição**: devolve os dias que já atingiram ou ultrapassaram o limite de marcações (no código atual, `>= 8` marcações por dia).
+  - **Descrição**: devolve os dias em que todas as vagas estão preenchidas (o limite é o número de slots do dia da semana: 9 de terça a sexta, 7 ao sábado).
   - **Resposta (200)**:
     - Array de datas em formato `YYYY-MM-DD`, por exemplo:
       ```json
