@@ -385,10 +385,19 @@
             let dataSelecionada = null;
             let horarioSelecionado = null;
 
-            // Horários de funcionamento (removida a hora do almoço)
-            const horarios = [
-                "09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"
-            ];
+            // Horário de funcionamento (preenchido a partir do /config, com fallback)
+            let horariosConfig = {
+                semana: ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
+                sabado: ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00"],
+                diasFechados: [0, 1]
+            };
+
+            // Slots possíveis para uma data YYYY-MM-DD ([] se estiver fechado)
+            function slotsParaData(data) {
+                const diaSemana = new Date(`${data}T00:00:00`).getDay();
+                if (horariosConfig.diasFechados.includes(diaSemana)) return [];
+                return diaSemana === 6 ? horariosConfig.sabado : horariosConfig.semana;
+            }
 
             // Inicializar o seletor de países
             const iti = window.intlTelInput(telefoneInput, {
@@ -398,19 +407,21 @@
                 utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
             });
 
-            // Função para carregar os serviços e preços disponíveis
+            // Função para carregar os serviços, preços e horário de funcionamento
             async function carregarServicos() {
                 try {
                     const response = await fetch('/config');
-                    const { servicos } = await response.json();
+                    const { servicos, horarios } = await response.json();
                     servicoSelect.innerHTML = Object.entries(servicos)
                         .map(([nome, preco]) => `<option value="${nome}">${nome} — ${preco}€</option>`)
                         .join('');
+                    if (horarios) {
+                        horariosConfig = horarios;
+                    }
                 } catch (error) {
                     console.error('Erro ao carregar serviços:', error);
                 }
             }
-            carregarServicos();
 
             // Função para carregar dias ocupados
             async function carregarDiasOcupados() {
@@ -432,11 +443,11 @@
                         time_24hr: true,
                         disable: [
                             function(date) {
-                                // Desabilita finais de semana
-                                if (date.getDay() === 0 || date.getDay() === 6) {
+                                // Desabilita os dias em que a barbearia está fechada (domingo e segunda)
+                                if (horariosConfig.diasFechados.includes(date.getDay())) {
                                     return true;
                                 }
-                                
+
                                 // Desabilita dias totalmente ocupados
                                 const dataStr = date.toISOString().split('T')[0];
                                 return diasOcupados.includes(dataStr);
@@ -472,8 +483,8 @@
                     const horariosOcupados = await response.json();
                     console.log('Horários ocupados recebidos:', horariosOcupados);
                     
-                    // Atualiza a lista de horários disponíveis
-                    let horariosDisponiveis = horarios.filter(hora => !horariosOcupados.includes(hora));
+                    // Atualiza a lista de horários disponíveis (slots do dia da semana selecionado)
+                    let horariosDisponiveis = slotsParaData(data).filter(hora => !horariosOcupados.includes(hora));
 
                     // Se o dia selecionado for hoje, remove os horários que já passaram
                     const agora = new Date();
@@ -633,8 +644,11 @@
                 // O loading é removido quando os horários são carregados
             }
 
-            // Carrega os dias ocupados quando a página carrega
-            carregarDiasOcupados();
+            // Carrega a configuração (serviços/horários) antes de montar o calendário
+            (async () => {
+                await carregarServicos();
+                await carregarDiasOcupados();
+            })();
     });
   </script>
 

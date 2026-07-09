@@ -287,57 +287,6 @@
             background-color: #1877f2;
         }
 
-        .barber-card {
-            background-color: var(--card-background);
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        .barber-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        }
-
-        .barber-title {
-            color: var(--accent-gold-dark);
-            font-weight: 500;
-            font-style: italic;
-            margin-bottom: 1rem;
-        }
-
-        .testimonial-card {
-            background-color: var(--card-background);
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        .testimonial-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        }
-
-        .testimonial-text {
-            font-style: italic;
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-color);
-        }
-
-        .testimonial-author {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        .stars {
-            font-size: 1.2rem;
-        }
-
         .contact-form {
             background-color: var(--card-background);
             border: 1px solid #eee;
@@ -423,9 +372,6 @@
                         <a class="nav-link" href="#servicos">Serviços</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#barbeiros">Barbeiros</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="#sobre">Sobre</a>
                     </li>
                     <li class="nav-item">
@@ -484,49 +430,6 @@
         </div>
     </section>
 
-    <!-- Barbeiros -->
-    <section id="barbeiros" class="section about-section">
-        <div class="container">
-            <h2 class="section-title">Nossos Barbeiros</h2>
-            <p class="text-center mb-5">Conheça nossos barbeiros, profissionais dedicados a oferecer o melhor em estilo e cuidado para você.</p>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="barber-card text-center">
-                        <div class="barber-image mb-3">
-                            <img src="images/barbeira.webp" alt="Barbeiro 1" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
-                        </div>
-                        <h4>João Silva</h4>
-                        <p class="barber-title">Barbeiro Principal</p>
-                        <p>Com mais de 8 anos de experiência, João é especialista em cortes modernos e técnicas avançadas de barba. Formado em academias internacionais, sempre busca as últimas tendências para oferecer o melhor aos clientes.</p>
-                        <a href="marcacao.html" class="btn btn-primary">Agendar com João</a>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="barber-card text-center">
-                        <div class="barber-image mb-3">
-                            <img src="images/barbeira2.webp" alt="Barbeiro 2" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
-                        </div>
-                        <h4>Miguel Santos</h4>
-                        <p class="barber-title">Especialista em Barba</p>
-                        <p>Miguel é apaixonado pela arte da barbearia desde 2019. Especialista em acabamentos perfeitos e cuidados com a barba, sempre com boa disposição para receber os clientes e proporcionar uma experiência única.</p>
-                        <a href="marcacao.html" class="btn btn-primary">Agendar com Miguel</a>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="barber-card text-center">
-                        <div class="barber-image mb-3">
-                            <img src="images/barbeira.webp" alt="Barbeiro 3" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
-                        </div>
-                        <h4>Carlos Mendes</h4>
-                        <p class="barber-title">Estilista</p>
-                        <p>Carlos incorporou a equipa em 2024, trazendo frescura e inovação. Formado em academias de prestígio, o seu interesse pela arte da barbearia despertou cedo e está sempre pronto para receber os clientes da melhor maneira.</p>
-                        <a href="marcacao.html" class="btn btn-primary">Agendar com Carlos</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Sobre -->
     <section id="sobre" class="section">
         <div class="container">
@@ -555,54 +458,6 @@
             <div class="row">
                 <div class="col-12">
                     <img src="images/espaco.webp" alt="Espaço da Barbearia" class="img-fluid rounded">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Depoimentos -->
-    <section id="depoimentos" class="section about-section">
-        <div class="container">
-            <h2 class="section-title">O que dizem os nossos clientes</h2>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="testimonial-card text-center">
-                        <div class="stars mb-3">
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                        </div>
-                        <p class="testimonial-text">"Excelente serviço prestado pela equipa da Art Of Fade. Recomendo a todos os meus amigos!"</p>
-                        <h5 class="testimonial-author">João Silva</h5>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="testimonial-card text-center">
-                        <div class="stars mb-3">
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                        </div>
-                        <p class="testimonial-text">"Podemos encontrar um espaço acolhedor, gerido por jovens barbeiros com qualidade. Recomendável 👌"</p>
-                        <h5 class="testimonial-author">Martim</h5>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="testimonial-card text-center">
-                        <div class="stars mb-3">
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                        </div>
-                        <p class="testimonial-text">"Atencioso e muito bom profissional, trabalho top com a máxima qualidade. Recomendo..."</p>
-                        <h5 class="testimonial-author">Tiago Miguel</h5>
-                    </div>
                 </div>
             </div>
         </div>
@@ -644,23 +499,18 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="contact-form">
-                        <h4 class="mb-4">Envie-nos uma mensagem</h4>
-                        <form>
-                            <div class="mb-3">
-                                <input type="text" class="form-control" placeholder="Seu nome" required>
-                            </div>
-                            <div class="mb-3">
-                                <input type="email" class="form-control" placeholder="Seu email" required>
-                            </div>
-                            <div class="mb-3">
-                                <input type="tel" class="form-control" placeholder="Seu telefone">
-                            </div>
-                            <div class="mb-3">
-                                <textarea class="form-control" rows="4" placeholder="Sua mensagem" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Enviar Mensagem</button>
-                        </form>
+                    <div class="contact-form d-flex flex-column justify-content-center h-100">
+                        <h4 class="mb-4">Fala connosco</h4>
+                        <p class="mb-4">Tens alguma dúvida ou preferes falar diretamente connosco? Estamos a um clique de distância.</p>
+                        <a href="https://wa.me/351918840064" target="_blank" class="btn btn-primary btn-lg mb-3">
+                            <i class="fa-brands fa-whatsapp me-2"></i>Enviar mensagem no WhatsApp
+                        </a>
+                        <a href="mailto:info@artoffade.pt" class="btn btn-outline-secondary btn-lg mb-3">
+                            <i class="fas fa-envelope me-2"></i>Enviar email
+                        </a>
+                        <a href="marcacao.html" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-calendar-check me-2"></i>Marcar horário online
+                        </a>
                     </div>
                 </div>
             </div>

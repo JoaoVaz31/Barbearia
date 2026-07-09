@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 const supabase = require('./database');
 const path = require('path');
 const app = express();
@@ -11,6 +12,21 @@ const port = process.env.PORT || 3000;
 
 const SERVICOS = { 'Corte': 12, 'Barba': 8, 'Corte + Barba': 18, 'Sobrancelha': 5 };
 const METODOS_PAGAMENTO = ['Dinheiro', 'MBWay'];
+
+// Horário de funcionamento: fechado domingo (0) e segunda (1); sábado fecha às 16:00
+const HORARIOS_SEMANA = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+const HORARIOS_SABADO = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
+const DIAS_FECHADOS = [0, 1];
+
+// Slots possíveis para uma data YYYY-MM-DD ([] se a barbearia estiver fechada nesse dia)
+function slotsParaData(data) {
+    const diaSemana = new Date(`${data}T00:00:00`).getDay();
+    if (DIAS_FECHADOS.includes(diaSemana)) return [];
+    return diaSemana === 6 ? HORARIOS_SABADO : HORARIOS_SEMANA;
+}
+
+// Necessário na Vercel para o rate limiting ver o IP real do cliente (X-Forwarded-For)
+app.set('trust proxy', 1);
 
 // Configuração do CORS
 app.use(cors({
@@ -22,6 +38,23 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+
+// Rate limiting (em memória: por instância serverless, suficiente como primeira barreira)
+const limiterAgendar = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    limit: 10,
+    message: { success: false, error: 'Demasiadas marcações num curto espaço de tempo. Tenta novamente mais tarde.' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+const limiterLogin = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 5,
+    message: { success: false, error: 'Demasiadas tentativas de login. Tenta novamente dentro de 15 minutos.' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
 
 // Limites do dia (00:00 a 00:00 do dia seguinte) usados para filtrar por data
 function limitesDoDia(data) {
@@ -53,7 +86,7 @@ function exigirAdminApi(req, res, next) {
     res.status(401).json({ error: 'Não autenticado' });
 }
 
-app.post('/admin/login', (req, res) => {
+app.post('/admin/login', limiterLogin, (req, res) => {
     const { senha } = req.body;
     const esperada = process.env.ADMIN_PASSWORD || '';
 
@@ -97,9 +130,17 @@ app.get('/marcacao', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'marcacao.html'));
 });
 
-// Rota pública com o catálogo de serviços/preços e métodos de pagamento
+// Rota pública com o catálogo de serviços/preços, métodos de pagamento e horário de funcionamento
 app.get('/config', (req, res) => {
-    res.json({ servicos: SERVICOS, metodosPagamento: METODOS_PAGAMENTO });
+    res.json({
+        servicos: SERVICOS,
+        metodosPagamento: METODOS_PAGAMENTO,
+        horarios: {
+            semana: HORARIOS_SEMANA,
+            sabado: HORARIOS_SABADO,
+            diasFechados: DIAS_FECHADOS
+        }
+    });
 });
 
 // Rota para obter horários ocupados de uma data específica
@@ -149,7 +190,11 @@ app.get('/dias-ocupados', async (req, res) => {
         contagemPorDia[dia] = (contagemPorDia[dia] || 0) + 1;
     });
 
-    const diasOcupados = Object.keys(contagemPorDia).filter(dia => contagemPorDia[dia] >= 8);
+    // Um dia está cheio quando todas as vagas desse dia da semana estão preenchidas
+    const diasOcupados = Object.keys(contagemPorDia).filter(dia => {
+        const totalSlots = slotsParaData(dia).length;
+        return totalSlots > 0 && contagemPorDia[dia] >= totalSlots;
+    });
     console.log('Dias totalmente ocupados:', diasOcupados);
 
     res.json(diasOcupados);
@@ -328,7 +373,7 @@ app.get('/admin/metricas', exigirAdminApi, async (req, res) => {
 });
 
 // Rota para criar um novo agendamento
-app.post('/agendar', async (req, res) => {
+app.post('/agendar', limiterAgendar, async (req, res) => {
     const { nome, telefone, data_hora } = req.body;
     const servico = req.body.servico || 'Corte';
 
@@ -362,6 +407,30 @@ app.post('/agendar', async (req, res) => {
         return res.status(400).json({
             success: false,
             error: 'Formato de data inválido'
+        });
+    }
+
+    // Rejeita dias em que a barbearia está fechada e horas fora dos slots do dia
+    const slotsDoDia = slotsParaData(data);
+    if (slotsDoDia.length === 0) {
+        return res.status(400).json({
+            success: false,
+            error: 'A barbearia está fechada nesse dia. Escolha de terça a sábado.'
+        });
+    }
+    if (!slotsDoDia.includes(hora)) {
+        return res.status(400).json({
+            success: false,
+            error: 'Hora fora do horário de funcionamento.'
+        });
+    }
+
+    // Rejeita marcações no passado
+    const agora = new Date();
+    if (new Date(`${data}T${hora}:00`) < agora) {
+        return res.status(400).json({
+            success: false,
+            error: 'Não é possível marcar num horário que já passou.'
         });
     }
 
@@ -400,6 +469,14 @@ app.post('/agendar', async (req, res) => {
         .single();
 
     if (insertError) {
+        // 23505 = violação de unicidade (duas marcações simultâneas para o mesmo horário)
+        if (insertError.code === '23505') {
+            console.log('Conflito de marcação simultânea:', { data, hora });
+            return res.status(400).json({
+                success: false,
+                error: 'Este horário já está ocupado. Por favor, escolha outro horário.'
+            });
+        }
         console.error('Erro ao criar agendamento:', insertError);
         return res.status(500).json({
             success: false,
