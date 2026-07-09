@@ -85,6 +85,9 @@
             margin-bottom: 2rem;
             transition: all 0.3s ease;
             text-align: center;
+            height: calc(100% - 2rem);
+            display: flex;
+            flex-direction: column;
         }
 
         .product-card:hover {
@@ -93,9 +96,15 @@
         }
 
         .product-card img {
-            max-width: 200px;
-            height: auto;
-            margin-bottom: 1rem;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 0 auto 1rem;
+        }
+
+        .product-card .product-price {
+            margin-top: auto;
         }
 
         .product-card h3 {

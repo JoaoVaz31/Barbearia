@@ -224,6 +224,9 @@
             margin-bottom: 2rem;
             transition: all 0.3s ease;
             text-align: center;
+            height: calc(100% - 2rem);
+            display: flex;
+            flex-direction: column;
         }
 
         .service-card:hover {
@@ -232,9 +235,15 @@
         }
 
         .service-card img {
-            max-width: 200px;
-            height: auto;
-            margin-bottom: 1rem;
+            width: 200px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 0 auto 1rem;
+        }
+
+        .service-card .service-price {
+            margin-top: auto;
         }
 
         .service-card h3 {
